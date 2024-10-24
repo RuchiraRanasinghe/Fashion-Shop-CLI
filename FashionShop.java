@@ -1,7 +1,77 @@
 import java.util.*;
 
-class FashionShop {
-	static int orderNumber = 0;
+class Orders {
+    private String orderId;
+    private String size;
+    private int quantity;
+    private double amount;
+    private String tpNumber;
+    private String status;
+
+	public Orders(){}
+
+    public Orders(String orderId, String size, int quantity, double amount, String tpNumber, String status) {
+        this.orderId = orderId;
+        this.size = size;
+        this.quantity = quantity;
+        this.amount = amount;
+        this.tpNumber = tpNumber;
+        this.status = status;
+    }
+
+	// Getters
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getTpNumber() {
+        return tpNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    // Setters
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setTpNumber(String tpNumber) {
+        this.tpNumber = tpNumber;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
+
+class Example {
+	static int orderNumber = 1;
 	static String tShirtSize = "";
 	static int qty = 0;
 	static double amount = 0.0;
@@ -16,6 +86,8 @@ class FashionShop {
 	static double[] amountMainArray = new double[0];
 	static String[] tpNumberMainArray = new String[0];
 	static String[] statusMainArray = new String[0];
+
+    static Orders[] ordersMainArray = new Orders[0];
 
 	public static void main(String args[]) {
 		homePage();
@@ -82,7 +154,6 @@ class FashionShop {
 
 	public static void placeOrder() {
 		clearConsole();
-		orderNumber += 1;
 
 		System.out.println("   _____  _                   ____          _           ");
 		System.out.println("  |  __ \\| |                 / __ \\        | |          ");
@@ -94,7 +165,7 @@ class FashionShop {
 
 		Scanner scanner = new Scanner(System.in);
 
-		String orderID = generateOrderID(orderNumber);
+		String orderID = generateOrderID();
 		System.out.println("Order ID: " + orderID);
 		getPhoneNumber();
 		getSize();
@@ -147,50 +218,30 @@ class FashionShop {
 	}
 
 	public static void extendArrays() {
-		String[] tempOID = new String[orderIdMainArray.length + 1];
-		String[] tempSize = new String[sizeMainArray.length + 1];
-		int[] tempQty = new int[qtyMainArray.length + 1];
-		double[] tempAmount = new double[amountMainArray.length + 1];
-		String[] tempTPNum = new String[tpNumberMainArray.length + 1];
-		String[] tempStatus = new String[statusMainArray.length + 1];
+		
+        Orders[] tempOrders = new Orders[ordersMainArray.length + 1];
 
-		for (int j = 0; j < orderIdMainArray.length; j++) {
-			tempOID[j] = orderIdMainArray[j];
+        for (int i = 0; i < ordersMainArray.length; i++) {
+			tempOrders[i] = ordersMainArray[i];
 		}
-		for (int j = 0; j < sizeMainArray.length; j++) {
-			tempSize[j] = sizeMainArray[j];
-		}
-		for (int j = 0; j < qtyMainArray.length; j++) {
-			tempQty[j] = qtyMainArray[j];
-		}
-		for (int j = 0; j < amountMainArray.length; j++) {
-			tempAmount[j] = amountMainArray[j];
-		}
-		for (int j = 0; j < tpNumberMainArray.length; j++) {
-			tempTPNum[j] = tpNumberMainArray[j];
-		}
-		for (int j = 0; j < statusMainArray.length; j++) {
-			tempStatus[j] = statusMainArray[j];
-		}
-		tempOID[tempOID.length - 1] = generateOrderID(orderNumber);
-		tempSize[tempSize.length - 1] = tShirtSize;
-		tempQty[tempQty.length - 1] = qty;
-		tempAmount[tempAmount.length - 1] = amount;
-		tempTPNum[tempTPNum.length - 1] = cusPhoneNumber;
-		tempStatus[tempStatus.length - 1] = statusCheck(PROCESSING);
 
-		orderIdMainArray = tempOID;
-		sizeMainArray = tempSize;
-		qtyMainArray = tempQty;
-		amountMainArray = tempAmount;
-		tpNumberMainArray = tempTPNum;
-		statusMainArray = tempStatus;
+        Orders newOrder = new Orders();
+        
+        newOrder.setOrderId(generateOrderID());
+		newOrder.setSize(tShirtSize);
+		newOrder.setQuantity(qty);
+		newOrder.setAmount(amount);
+		newOrder.setTpNumber(cusPhoneNumber);
+		newOrder.setStatus(statusCheck(PROCESSING));
+
+		tempOrders[tempOrders.length - 1] = newOrder;
+		ordersMainArray = tempOrders;
 
 	}
 
-	public static String statusCheck(int statucNumber) {
+	public static String statusCheck(int statusNumber) {
 		String tempStatus = "";
-		switch (statucNumber) {
+		switch (statusNumber) {
 			case 0:
 				tempStatus = "Processing";
 				break;
@@ -204,7 +255,7 @@ class FashionShop {
 		return tempStatus;
 	}
 
-	public static String generateOrderID(int orderNumber) {
+	public static String generateOrderID() {
 		int tempOrderNumber = orderNumber;
 
 		int[] tempNumOrder = new int[5];
